@@ -25,5 +25,15 @@ class JWTSettings(CustomBaseSettings):
     REFRESH_TOKEN_DAYS_EXPIRE: int
 
 
+class RedisSettings(CustomBaseSettings):
+    REDIS_PASSWORD: str
+    REDIS_USER: str
+    REDIS_USER_PASSWORD: str
+    REDIS_HOST: str
+    REDIS_PORT: int
+    REDIS_MAX_CONNECTIONS: int
+
+
 database_settings = DatabaseSettings()
 jwt_settings = JWTSettings()
+redis_settings = RedisSettings()
