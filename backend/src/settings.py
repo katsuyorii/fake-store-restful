@@ -17,4 +17,13 @@ class DatabaseSettings(CustomBaseSettings):
         return f'postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
 
 
+class JWTSettings(CustomBaseSettings):
+    JWT_PRIVATE_KEY: str
+    JWT_PUBLIC_KEY: str
+    JWT_ALGORITHM: str
+    ACCESS_TOKEN_MINUTES_EXPIRE: int
+    REFRESH_TOKEN_DAYS_EXPIRE: int
+
+
 database_settings = DatabaseSettings()
+jwt_settings = JWTSettings()
