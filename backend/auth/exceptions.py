@@ -9,3 +9,8 @@ class LoginOrPasswordIncorrect(HTTPException):
 class AccountNotActive(HTTPException):
     def __init__(self):
         super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail='Account not activated')
+
+
+class TokenMissing(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token is missing')    

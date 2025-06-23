@@ -1,4 +1,4 @@
-from fastapi import Response
+from fastapi import Response, Request
 
 from datetime import datetime, timedelta, timezone
 
@@ -11,7 +11,7 @@ from src.settings import jwt_settings
 from users.repositories import UsersRepository
 
 from .schemas import AccessTokenSchema, UserRegistrationSchema, UserLoginSchema
-from .exceptions import LoginOrPasswordIncorrect, AccountNotActive
+from .exceptions import LoginOrPasswordIncorrect, AccountNotActive, TokenMissing
 
 
 class TokensService:
@@ -84,3 +84,12 @@ class AuthService:
         self.tokens_service.set_token_to_cookies(response, 'refresh_token', refresh_token, jwt_settings.REFRESH_TOKEN_DAYS_EXPIRE * 24 * 60 * 60)
 
         return AccessTokenSchema(access_token=access_token)
+    
+    async def logout(self, request: Request, response: Response):
+        access_token = request.cookies.get('access_token')
+
+        if not access_token:
+            raise TokenMissing()
+
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
