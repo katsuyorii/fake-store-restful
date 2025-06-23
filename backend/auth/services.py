@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from core.utils.exceptions import EmailAlreadyRegistered
 from core.utils.password import hashing_password, verify_password
 from core.utils.jwt import create_jwt_token
+from core.repositories.redis_base import RedisBaseRepository
 
 from src.settings import jwt_settings
 
@@ -53,9 +54,10 @@ class TokensService:
 
 
 class AuthService:
-    def __init__(self, users_repository: UsersRepository, tokens_service: TokensService):
+    def __init__(self, users_repository: UsersRepository, tokens_service: TokensService, redis_repository: RedisBaseRepository):
         self.users_repository = users_repository
         self.tokens_service = tokens_service
+        self.redis_repository = redis_repository
     
     async def registration(self, user_data: UserRegistrationSchema) -> None:
         user = await self.users_repository.get_by_email(user_data.email)
