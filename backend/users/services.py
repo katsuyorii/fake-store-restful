@@ -8,6 +8,11 @@ class UsersAddressesService:
         self.current_user = current_user
         self.users_addresses_repository = users_addresses_repository
     
+    async def get_all_addresses(self, skip: int | None = None, limit: int | None = None) -> list[UserAddressModel]:
+        addresses = await self.users_addresses_repository.get_all(skip, limit)
+
+        return addresses
+    
     async def create_address(self, address_data: UserAddressCreateSchema) -> UserAddressModel:
         new_address = await self.users_addresses_repository.create(address_data.model_dump(exclude_unset=True))
 
