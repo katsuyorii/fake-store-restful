@@ -10,6 +10,10 @@ users_router = APIRouter(
     tags=['Users'],
 )
 
+@users_router.get('', response_model=list[UserResponseSchema])
+async def get_all_users(skip: int | None = None, limit: int | None = None, users_service: UsersService = Depends(get_users_service)):
+    return await users_service.get_all_users(skip, limit)
+
 @users_router.get('/me', response_model=UserResponseSchema)
 async def get_me(users_service: UsersService = Depends(get_users_service)):
     return await users_service.get_me()

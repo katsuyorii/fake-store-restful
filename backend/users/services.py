@@ -53,6 +53,11 @@ class UsersService:
     def __init__(self, current_user: UserModel, users_repository: UsersRepository):
         self.current_user = current_user
         self.users_repository = users_repository
+
+    async def get_all_users(self, skip: int | None, limit: int | None) -> list[UserModel]:
+        users = await self.users_repository.get_all(skip, limit)
+
+        return users
     
     async def get_me(self) -> UserModel:
         return self.current_user
