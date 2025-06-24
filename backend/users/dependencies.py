@@ -8,6 +8,7 @@ from core.utils.jwt import verify_jwt_token
 from core.utils.exceptions import UserNotFound
 
 from .repositories import UsersRepository
+from .services import UsersService
 from .models import UserModel
 
 
@@ -26,3 +27,6 @@ async def get_current_user(access_token: str = Depends(oauth2_scheme), users_rep
         raise UserNotFound()
 
     return user
+
+def get_users_service(current_user: UserModel = Depends(get_current_user), users_repository: UsersRepository = Depends(get_users_repository)) -> UsersService:
+    return UsersService(current_user, users_repository)

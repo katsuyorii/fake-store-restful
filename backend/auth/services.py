@@ -86,22 +86,22 @@ class AuthService:
 
         await self.users_repository.create(user_data_dict)
     
-        async def authentication(self, user_data: UserLoginSchema, response: Response) -> AccessTokenSchema:
-            user = await self.users_repository.get_by_email(user_data.email)
+    async def authentication(self, user_data: UserLoginSchema, response: Response) -> AccessTokenSchema:
+        user = await self.users_repository.get_by_email(user_data.email)
 
-            if not user or not verify_password(user_data.password, user.password):
-                raise LoginOrPasswordIncorrect()
-            
-            if user.is_active:
-                raise AccountNotActive()
-            
-            access_token = self.tokens_service.create_access_token({'sub': str(user.id), 'role': user.role})
-            refresh_token = self.tokens_service.create_refresh_token({'sub': str(user.id)})
+        if not user or not verify_password(user_data.password, user.password):
+            raise LoginOrPasswordIncorrect()
+        
+        if user.is_active:
+            raise AccountNotActive()
+        
+        access_token = self.tokens_service.create_access_token({'sub': str(user.id), 'role': user.role})
+        refresh_token = self.tokens_service.create_refresh_token({'sub': str(user.id)})
 
-            self.tokens_service.set_token_to_cookies(response, 'access_token', access_token, jwt_settings.ACCESS_TOKEN_MINUTES_EXPIRE * 60)
-            self.tokens_service.set_token_to_cookies(response, 'refresh_token', refresh_token, jwt_settings.REFRESH_TOKEN_DAYS_EXPIRE * 24 * 60 * 60)
+        self.tokens_service.set_token_to_cookies(response, 'access_token', access_token, jwt_settings.ACCESS_TOKEN_MINUTES_EXPIRE * 60)
+        self.tokens_service.set_token_to_cookies(response, 'refresh_token', refresh_token, jwt_settings.REFRESH_TOKEN_DAYS_EXPIRE * 24 * 60 * 60)
 
-            return AccessTokenSchema(access_token=access_token)
+        return AccessTokenSchema(access_token=access_token)
     
     async def logout(self, request: Request, response: Response):
         refresh_token = request.cookies.get('refresh_token')
