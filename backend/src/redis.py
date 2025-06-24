@@ -6,7 +6,6 @@ from .settings import redis_settings
 redis_pool = ConnectionPool(
     host=redis_settings.REDIS_HOST,
     port=redis_settings.REDIS_PORT,
-    password=redis_settings.REDIS_PASSWORD,
     max_connections=redis_settings.REDIS_MAX_CONNECTIONS,
 )
 

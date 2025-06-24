@@ -26,9 +26,6 @@ class JWTSettings(CustomBaseSettings):
 
 
 class RedisSettings(CustomBaseSettings):
-    REDIS_PASSWORD: str
-    REDIS_USER: str
-    REDIS_USER_PASSWORD: str
     REDIS_HOST: str
     REDIS_PORT: int
     REDIS_MAX_CONNECTIONS: int
