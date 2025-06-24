@@ -10,12 +10,12 @@ class UsersAddressesService:
         self.users_addresses_repository = users_addresses_repository
     
     async def get_all_addresses(self, skip: int | None = None, limit: int | None = None) -> list[UserAddressModel]:
-        addresses = await self.users_addresses_repository.get_all(skip, limit)
+        addresses = await self.users_addresses_repository.get_all(self.current_user.id, skip, limit)
 
         return addresses
     
     async def get_address(self, address_id: int) -> UserAddressModel | None:
-        address = await self.users_addresses_repository.get_by_id(address_id)
+        address = await self.users_addresses_repository.get_by_id(self.current_user.id, address_id)
 
         if not address:
             raise AddressNotFound()
