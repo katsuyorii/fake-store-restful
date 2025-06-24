@@ -1,6 +1,7 @@
 from .repositories import UsersRepository, UsersAddressesRepository
 from .models import UserModel, UserAddressModel
 from .schemas import UserUpdateSchema, UserAddressCreateSchema
+from .exceptions import AddressNotFound
 
 
 class UsersAddressesService:
@@ -12,6 +13,14 @@ class UsersAddressesService:
         addresses = await self.users_addresses_repository.get_all(skip, limit)
 
         return addresses
+    
+    async def get_address(self, address_id: int) -> UserAddressModel | None:
+        address = await self.users_addresses_repository.get_by_id(address_id)
+
+        if not address:
+            raise AddressNotFound()
+        
+        return address
     
     async def create_address(self, address_data: UserAddressCreateSchema) -> UserAddressModel:
         new_address = await self.users_addresses_repository.create(address_data.model_dump(exclude_unset=True))

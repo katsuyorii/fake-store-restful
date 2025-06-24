@@ -26,6 +26,10 @@ async def delete_me(users_service: UsersService = Depends(get_users_service)):
 async def get_all_addresses(skip: int | None = None, limit: int | None = None, users_addresses_service: UsersAddressesService = Depends(get_users_addresses_service)):
     return await users_addresses_service.get_all_addresses(skip, limit)
 
+@users_router.get('/me/addresses/{address_id}', response_model=UserAddressResponseSchema)
+async def get_address(address_id: int, users_addresses_service: UsersAddressesService = Depends(get_users_addresses_service)):
+    return await users_addresses_service.get_address(address_id)
+
 @users_router.post('/me/addresses', status_code=status.HTTP_201_CREATED, response_model=UserAddressResponseSchema)
 async def create_address(address_data: UserAddressCreateSchema, users_addresses_service: UsersAddressesService = Depends(get_users_addresses_service)):
     return await users_addresses_service.create_address(address_data)
