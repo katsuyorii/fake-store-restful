@@ -12,8 +12,8 @@ class UserUpdateSchema(BaseModel):
     last_name: str | None = Field(default=None)
     phone_number: str | None = Field(default=None)
     birthday: date |None = Field(default=None)
-    gender: UserGenderEnum |None = Field(default=None)
-    is_mailing: bool
+    gender: UserGenderEnum | None = Field(default=None)
+    is_mailing: bool | None = Field(default=None)
 
     @field_validator('phone_number')
     @classmethod
@@ -49,11 +49,20 @@ class UserAddressResponseSchema(BaseModel):
 
 
 class UserAddressCreateSchema(BaseModel):
-    user_id: int
     street: str
     house: str
     entrance: str | None = Field(default=None)
     floor: int | None = Field(default=None)
     apartment: int
+    intercom: str | None = Field(default=None)
+    comment: str | None = Field(default=None)
+
+
+class UserAddressUpdateSchema(BaseModel):
+    street: str | None = Field(default=None)
+    house: str | None = Field(default=None)
+    entrance: str | None = Field(default=None)
+    floor: int | None = Field(default=None)
+    apartment: int | None = Field(default=None)
     intercom: str | None = Field(default=None)
     comment: str | None = Field(default=None)

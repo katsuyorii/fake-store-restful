@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 
-from .schemas import UserResponseSchema, UserUpdateSchema, UserAddressResponseSchema, UserAddressCreateSchema
+from .schemas import UserResponseSchema, UserUpdateSchema, UserAddressResponseSchema, UserAddressCreateSchema, UserAddressUpdateSchema
 from .services import UsersService, UsersAddressesService
 from .dependencies import get_users_service, get_users_addresses_service
 
@@ -33,3 +33,7 @@ async def get_address(address_id: int, users_addresses_service: UsersAddressesSe
 @users_router.post('/me/addresses', status_code=status.HTTP_201_CREATED, response_model=UserAddressResponseSchema)
 async def create_address(address_data: UserAddressCreateSchema, users_addresses_service: UsersAddressesService = Depends(get_users_addresses_service)):
     return await users_addresses_service.create_address(address_data)
+
+@users_router.patch('/me/addresses/{address_id}', response_model=UserAddressResponseSchema)
+async def update_address(address_id: int, address_updated_data: UserAddressUpdateSchema, users_addresses_service: UsersAddressesService = Depends(get_users_addresses_service)):
+    return await users_addresses_service.update_address(address_id, address_updated_data)
