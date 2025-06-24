@@ -34,3 +34,26 @@ class UserResponseSchema(BaseModel):
     updated_at: datetime
     is_active: bool
     is_mailing: bool
+
+
+class UserAddressResponseSchema(BaseModel):
+    id: int
+    user_id: int
+    street: str
+    house: str
+    entrance: str | None
+    floor: int | None
+    apartment: int
+    intercom: str | None
+    comment: str | None
+
+
+class UserAddressCreateSchema(BaseModel):
+    user_id: int
+    street: str
+    house: str
+    entrance: str | None = Field(default=None)
+    floor: int | None = Field(default=None)
+    apartment: int
+    intercom: str | None = Field(default=None)
+    comment: str | None = Field(default=None)

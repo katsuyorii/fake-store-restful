@@ -1,12 +1,17 @@
 from .repositories import UsersRepository, UsersAddressesRepository
-from .models import UserModel
-from .schemas import UserUpdateSchema
+from .models import UserModel, UserAddressModel
+from .schemas import UserUpdateSchema, UserAddressCreateSchema
 
 
 class UsersAddressesService:
     def __init__(self, current_user: UserModel, users_addresses_repository: UsersAddressesRepository):
         self.current_user = current_user
         self.users_addresses_repository = users_addresses_repository
+    
+    async def create_address(self, address_data: UserAddressCreateSchema) -> UserAddressModel:
+        new_address = await self.users_addresses_repository.create(address_data.model_dump(exclude_unset=True))
+
+        return new_address
 
 
 class UsersService:
