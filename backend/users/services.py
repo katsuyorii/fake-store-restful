@@ -15,3 +15,6 @@ class UsersService:
         updated_user = await self.users_repository.update(self.current_user, user_updated_data.model_dump(exclude_unset=True))
 
         return updated_user
+    
+    async def delete_me(self) -> None:
+        await self.users_repository.delete(self.current_user)
