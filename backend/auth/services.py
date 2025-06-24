@@ -3,7 +3,7 @@ from fastapi import Response, Request
 from time import time
 from datetime import datetime, timedelta, timezone
 
-from core.utils.exceptions import EmailAlreadyRegistered
+from core.utils.exceptions import EmailAlreadyRegistered, JWTTokenInvalid, UserNotFound
 from core.utils.password import hashing_password, verify_password
 from core.utils.jwt import create_jwt_token, verify_jwt_token
 from core.repositories.redis_base import RedisBaseRepository
@@ -20,12 +20,15 @@ class BlacklistTokensService:
     def __init__(self, redis_repository: RedisBaseRepository):
         self.redis_repository = redis_repository
     
-    async def add_to_blacklist(self, value: str, ex: int):
+    async def add_to_blacklist(self, value: str, ex: int) -> None:
         key = f'blacklist:{value}'
         current_time = int(time())
         ttl = ex - current_time
 
         await self.redis_repository.setex(key, '1', ttl)
+    
+    async def is_blacklisted(self, key: str) -> bool:
+        return await self.redis_repository.exists(key)
 
 
 class TokensService:
@@ -101,11 +104,13 @@ class AuthService:
         return AccessTokenSchema(access_token=access_token)
     
     async def logout(self, request: Request, response: Response):
-        access_token = request.cookies.get('access_token')
         refresh_token = request.cookies.get('refresh_token')
 
-        if not access_token:
+        if not refresh_token:
             raise TokenMissing()
+        
+        if await self.blacklist_tokens_service.is_blacklisted(f'blacklist:{refresh_token}'):
+            raise JWTTokenInvalid()
         
         payload = verify_jwt_token(refresh_token)
 
@@ -113,3 +118,29 @@ class AuthService:
 
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
+    
+    async def refresh(self, request: Request, response: Response) -> AccessTokenSchema:
+        refresh_token = request.cookies.get('refresh_token')
+
+        if not refresh_token:
+            raise TokenMissing()
+        
+        if await self.blacklist_tokens_service.is_blacklisted(f'blacklist:{refresh_token}'):
+            raise JWTTokenInvalid()
+        
+        payload = verify_jwt_token(refresh_token)
+
+        await self.blacklist_tokens_service.add_to_blacklist(refresh_token, payload.get('exp'))
+
+        user = await self.users_repository.get_by_id(int(payload.get('sub')))
+
+        if not user or user.is_active:
+            raise UserNotFound()
+
+        new_access_token = self.tokens_service.create_access_token({'sub': str(user.id), 'role': user.role})
+        new_refresh_token = self.tokens_service.create_refresh_token({'sub': str(user.id)})
+
+        self.tokens_service.set_token_to_cookies(response, 'access_token', new_access_token, jwt_settings.ACCESS_TOKEN_MINUTES_EXPIRE * 60)
+        self.tokens_service.set_token_to_cookies(response, 'refresh_token', new_refresh_token, jwt_settings.REFRESH_TOKEN_DAYS_EXPIRE * 24 * 60 * 60)
+
+        return AccessTokenSchema(access_token=new_access_token)

@@ -18,4 +18,4 @@ class RedisBaseRepository:
         await self.redis.delete(key)
     
     async def exists(self, key: str) -> bool:
-        return await self.exists(key) > 0
+        return await self.redis.exists(key) > 0
