@@ -39,6 +39,14 @@ class UsersAddressesService:
         await self.users_addresses_repository.update(address, address_updated_data.model_dump(exclude_unset=True))
 
         return address
+    
+    async def delete_address(self, address_id: int) -> None:
+        address = await self.users_addresses_repository.get_by_id(self.current_user.id, address_id)
+
+        if not address:
+            raise AddressNotFound()
+        
+        await self.users_addresses_repository.delete(address)
 
 
 class UsersService:

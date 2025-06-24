@@ -37,3 +37,7 @@ async def create_address(address_data: UserAddressCreateSchema, users_addresses_
 @users_router.patch('/me/addresses/{address_id}', response_model=UserAddressResponseSchema)
 async def update_address(address_id: int, address_updated_data: UserAddressUpdateSchema, users_addresses_service: UsersAddressesService = Depends(get_users_addresses_service)):
     return await users_addresses_service.update_address(address_id, address_updated_data)
+
+@users_router.delete('/me/addresses/{address_id}', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_address(address_id: int, users_addresses_service: UsersAddressesService = Depends(get_users_addresses_service)):
+    await users_addresses_service.delete_address(address_id)
