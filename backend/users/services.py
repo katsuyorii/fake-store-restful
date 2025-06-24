@@ -1,6 +1,12 @@
-from .repositories import UsersRepository
+from .repositories import UsersRepository, UsersAddressesRepository
 from .models import UserModel
 from .schemas import UserUpdateSchema
+
+
+class UsersAddressesService:
+    def __init__(self, current_user: UserModel, users_addresses_repository: UsersAddressesRepository):
+        self.current_user = current_user
+        self.users_addresses_repository = users_addresses_repository
 
 
 class UsersService:

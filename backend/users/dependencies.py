@@ -7,8 +7,8 @@ from core.dependencies.database import get_db
 from core.utils.jwt import verify_jwt_token
 from core.utils.exceptions import UserNotFound
 
-from .repositories import UsersRepository
-from .services import UsersService
+from .repositories import UsersRepository, UsersAddressesRepository
+from .services import UsersService, UsersAddressesService
 from .models import UserModel
 
 
@@ -17,6 +17,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 def get_users_repository(db: AsyncSession = Depends(get_db)) -> UsersRepository:
     return UsersRepository(db)
+
+def get_users_addresses_repository(db: AsyncSession = Depends(get_db)) -> UsersAddressesRepository:
+    return UsersAddressesRepository(db)
 
 async def get_current_user(access_token: str = Depends(oauth2_scheme), users_repository: UsersRepository = Depends(get_users_repository)) -> UserModel:
     payload = verify_jwt_token(access_token)
@@ -27,6 +30,9 @@ async def get_current_user(access_token: str = Depends(oauth2_scheme), users_rep
         raise UserNotFound()
 
     return user
+
+def get_users_addresses_service(current_user: UserModel = Depends(get_current_user), users_addresses_repository: UsersAddressesRepository = Depends(get_users_addresses_repository)) -> UsersAddressesService:
+    return UsersAddressesService(current_user, users_addresses_repository)
 
 def get_users_service(current_user: UserModel = Depends(get_current_user), users_repository: UsersRepository = Depends(get_users_repository)) -> UsersService:
     return UsersService(current_user, users_repository)

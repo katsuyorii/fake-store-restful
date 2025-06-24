@@ -3,7 +3,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.repositories.database_base import DatabaseBaseRepository
 
-from .models import UserModel
+from .models import UserModel, UserAddressModel
+
+
+class UsersAddressesRepository(DatabaseBaseRepository):
+    def __init__(self, db: AsyncSession, model: UserAddressModel = UserAddressModel):
+        super().__init__(db, model)
 
 
 class UsersRepository(DatabaseBaseRepository):
