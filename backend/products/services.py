@@ -2,6 +2,7 @@ from .repositories import ProductCategoriesRepository, ProductManufacturersRepos
 
 from .schemas import CategoryCreateSchema
 from .models import ProductCategory
+from .exceptions import CategoryNotFound
 
 
 class ProductCategoriesService:
@@ -10,6 +11,14 @@ class ProductCategoriesService:
     
     async def get_all_categories(self, skip: int | None = None, limit: int | None = None) -> list[ProductCategory]:
         return await self.product_categories_repository.get_all(skip, limit)
+    
+    async def get_category(self, category_id: int) -> ProductCategory | None:
+        category = await self.product_categories_repository.get_by_id(category_id)
+
+        if not category:
+            raise CategoryNotFound()
+
+        return category
         
     async def create_category(self, category_data: CategoryCreateSchema) -> ProductCategory:
         return await self.product_categories_repository.create(category_data.model_dump(exclude_unset=True))
