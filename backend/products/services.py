@@ -8,6 +8,9 @@ class ProductCategoriesService:
     def __init__(self, product_categories_repository: ProductCategoriesRepository):
         self.product_categories_repository = product_categories_repository
     
+    async def get_all_categories(self, skip: int | None = None, limit: int | None = None) -> list[ProductCategory]:
+        return await self.product_categories_repository.get_all(skip, limit)
+        
     async def create_category(self, category_data: CategoryCreateSchema) -> ProductCategory:
         return await self.product_categories_repository.create(category_data.model_dump(exclude_unset=True))
 
