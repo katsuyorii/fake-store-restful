@@ -15,9 +15,19 @@ categories_router = APIRouter(
     tags=['Categories'],
 )
 
-manufacturers_router = APIRouter(
-    prefix='/manufacturers',
-    tags=['Manufacturers'],
+brands_router = APIRouter(
+    prefix='/brands',
+    tags=['Brands'],
+)
+
+sizes_router = APIRouter(
+    prefix='/sizes',
+    tags=['Sizes'],
+)
+
+colors_router = APIRouter(
+    prefix='/colors',
+    tags=['Colors'],
 )
 
 

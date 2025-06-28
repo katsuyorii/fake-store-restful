@@ -1,4 +1,4 @@
-from .repositories import ProductCategoriesRepository
+from .repositories import ProductCategoriesRepository, ProductBrandsRepository, ProductSizesRepository, ProductColorsRepository
 
 from .schemas import CategoryCreateSchema, CategoryUpdateSchema
 from .models import ProductCategoryModel
@@ -38,3 +38,18 @@ class ProductCategoriesService:
             raise CategoryNotFound()
         
         await self.product_categories_repository.delete(category)
+
+
+class ProductBrandsService:
+    def __init__(self, product_brands_repository: ProductBrandsRepository):
+        self.product_brands_repository = product_brands_repository
+
+
+class ProductSizesService:
+    def __init__(self, product_sizes_repository: ProductSizesRepository):
+        self.product_sizes_repository = product_sizes_repository
+
+
+class ProductColorsService:
+    def __init__(self, product_colors_repository: ProductColorsRepository):
+        self.product_colors_repository = product_colors_repository
