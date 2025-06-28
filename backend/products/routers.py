@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 
-from .schemas import CategoryResponseSchema, CategoryCreateSchema
+from .schemas import CategoryResponseSchema, CategoryCreateSchema, CategoryUpdateSchema
 from .services import ProductCategoriesService
 from .dependencies import get_product_categories_service
 
@@ -32,3 +32,7 @@ async def get_category(category_id: int, product_categories_service: ProductCate
 @categories_router.post('', status_code=status.HTTP_201_CREATED, response_model=CategoryResponseSchema)
 async def create_category(category_data: CategoryCreateSchema, product_categories_service: ProductCategoriesService = Depends(get_product_categories_service)):
     return await product_categories_service.create_category(category_data)
+
+@categories_router.patch('/{category_id}', response_model=CategoryResponseSchema)
+async def update_category(category_id: int, category_updated_data: CategoryUpdateSchema, product_categories_service: ProductCategoriesService = Depends(get_product_categories_service)):
+    return await product_categories_service.update_category(category_id, category_updated_data)

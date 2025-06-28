@@ -18,6 +18,14 @@ class ProductCategoriesRepository(DatabaseBaseRepository):
         await self.db.commit()
         await self.db.refresh(obj)
         return obj
+    
+    async def update(self, obj, updated_obj_data: dict) -> ProductCategory:
+        updated_obj_data['slug'] = slugify(updated_obj_data.get('name'))
+        for key, value in updated_obj_data.items():
+            setattr(obj, key, value)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
 
 
 class ProductManufacturersRepository(DatabaseBaseRepository):
