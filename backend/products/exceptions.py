@@ -14,3 +14,8 @@ class BrandNotFound(HTTPException):
 class SizeNotFound(HTTPException):
     def __init__(self):
         super().__init__(status_code=status.HTTP_404_NOT_FOUND, detail='Size not found')
+
+
+class ColorNotFound(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_404_NOT_FOUND, detail='Color not found')
