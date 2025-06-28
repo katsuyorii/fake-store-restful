@@ -4,7 +4,7 @@ from slugify import slugify
 
 from core.repositories.database_base import DatabaseBaseRepository
 
-from .models import ProductCategoryModel, ProductBrandModel, ProductSizeModel, ProductColorModel
+from products.models import ProductCategoryModel
 
 
 class ProductCategoriesRepository(DatabaseBaseRepository):
@@ -26,18 +26,3 @@ class ProductCategoriesRepository(DatabaseBaseRepository):
         await self.db.commit()
         await self.db.refresh(obj)
         return obj
-
-
-class ProductBrandsRepository(ProductCategoriesRepository):
-    def __init__(self, db, model: ProductBrandModel = ProductBrandModel):
-        super().__init__(db, model)
-
-
-class ProductSizesRepository(DatabaseBaseRepository):
-    def __init__(self, db, model: ProductSizeModel = ProductSizeModel):
-        super().__init__(db, model)
-
-
-class ProductColorsRepository(DatabaseBaseRepository):
-    def __init__(self, db, model: ProductColorModel = ProductColorModel):
-        super().__init__(db, model)

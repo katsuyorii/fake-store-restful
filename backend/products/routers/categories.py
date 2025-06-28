@@ -1,35 +1,14 @@
 from fastapi import APIRouter, Depends, status
 
-from .schemas import CategoryResponseSchema, CategoryCreateSchema, CategoryUpdateSchema
-from .services import ProductCategoriesService
-from .dependencies import get_product_categories_service
+from products.schemas.categories import CategoryResponseSchema, CategoryCreateSchema, CategoryUpdateSchema
+from products.services.categories import ProductCategoriesService
+from products.dependencies import get_product_categories_service
 
-
-products_router = APIRouter(
-    prefix='/products',
-    tags=['Products'],
-)
 
 categories_router = APIRouter(
     prefix='/categories',
     tags=['Categories'],
 )
-
-brands_router = APIRouter(
-    prefix='/brands',
-    tags=['Brands'],
-)
-
-sizes_router = APIRouter(
-    prefix='/sizes',
-    tags=['Sizes'],
-)
-
-colors_router = APIRouter(
-    prefix='/colors',
-    tags=['Colors'],
-)
-
 
 @categories_router.get('', response_model=list[CategoryResponseSchema])
 async def get_all_categories(skip: int | None = None, limit: int | None = None, product_categories_service: ProductCategoriesService = Depends(get_product_categories_service)):

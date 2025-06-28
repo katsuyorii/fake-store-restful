@@ -4,8 +4,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.dependencies.database import get_db
 
-from .repositories import ProductCategoriesRepository, ProductBrandsRepository, ProductColorsRepository, ProductSizesRepository
-from .services import ProductCategoriesService, ProductBrandsService, ProductSizesService, ProductColorsService
+from products.repositories.categories import ProductCategoriesRepository
+from products.repositories.brands import ProductBrandsRepository
+from products.repositories.sizes import ProductSizesRepository
+from products.repositories.colors import ProductColorsRepository
+from products.services.categories import ProductCategoriesService
+from products.services.brands import ProductBrandsService
+from products.services.sizes import ProductSizesService
+from products.services.colors import ProductColorsService
 
 
 def get_product_categories_repository(db: AsyncSession = Depends(get_db)) -> ProductCategoriesRepository:
