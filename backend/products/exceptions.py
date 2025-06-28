@@ -9,3 +9,8 @@ class CategoryNotFound(HTTPException):
 class BrandNotFound(HTTPException):
     def __init__(self):
         super().__init__(status_code=status.HTTP_404_NOT_FOUND, detail='Brand not found')
+
+
+class SizeNotFound(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_404_NOT_FOUND, detail='Size not found')
