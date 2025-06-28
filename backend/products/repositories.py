@@ -4,14 +4,14 @@ from slugify import slugify
 
 from core.repositories.database_base import DatabaseBaseRepository
 
-from .models import ProductCategory, ProductManufacturer
+from .models import ProductCategoryModel
 
 
 class ProductCategoriesRepository(DatabaseBaseRepository):
-    def __init__(self, db: AsyncSession, model: ProductCategory = ProductCategory):
+    def __init__(self, db: AsyncSession, model: ProductCategoryModel = ProductCategoryModel):
         super().__init__(db, model)
     
-    async def create(self, obj_data: dict) -> ProductCategory:
+    async def create(self, obj_data: dict) -> ProductCategoryModel:
         obj_data['slug'] = slugify(obj_data.get('name'))
         obj = self.model(**obj_data)
         self.db.add(obj)
@@ -19,15 +19,10 @@ class ProductCategoriesRepository(DatabaseBaseRepository):
         await self.db.refresh(obj)
         return obj
     
-    async def update(self, obj, updated_obj_data: dict) -> ProductCategory:
+    async def update(self, obj, updated_obj_data: dict) -> ProductCategoryModel:
         updated_obj_data['slug'] = slugify(updated_obj_data.get('name'))
         for key, value in updated_obj_data.items():
             setattr(obj, key, value)
         await self.db.commit()
         await self.db.refresh(obj)
         return obj
-
-
-class ProductManufacturersRepository(DatabaseBaseRepository):
-    def __init__(self, db: AsyncSession, model: ProductManufacturer = ProductManufacturer):
-        super().__init__(db, model)

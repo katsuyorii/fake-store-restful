@@ -8,22 +8,13 @@ from decimal import Decimal
 from core.models.base import BaseModel
 
 
-class ProductCategory(BaseModel):
+class ProductCategoryModel(BaseModel):
     __tablename__ = 'categories'
 
     name: Mapped[str] = mapped_column(String(128), unique=True, index=True)
     slug: Mapped[str] = mapped_column(String(256))
 
     products: Mapped[list["ProductModel"]] = relationship(back_populates='category')
-
-
-class ProductManufacturer(BaseModel):
-    __tablename__ = 'manufacturers'
-
-    name: Mapped[str] = mapped_column(String(128), unique=True, index=True)
-    slug: Mapped[str] = mapped_column(String(256))
-
-    products: Mapped[list["ProductModel"]] = relationship(back_populates='manufacturer')
 
 
 class ProductModel(BaseModel):
@@ -35,13 +26,9 @@ class ProductModel(BaseModel):
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2), CheckConstraint('price >= 0.00'), default=Decimal('0.00'))
     discount_percent: Mapped[int] = mapped_column(CheckConstraint('discount_percent >= 0'), nullable=True)
     amount: Mapped[int] = mapped_column(CheckConstraint('amount >= 0'), default=0)
-    weight: Mapped[float] = mapped_column(CheckConstraint('weight > 0'), nullable=True)
-    year_issue: Mapped[int] = mapped_column(CheckConstraint('year_issue > 0'), nullable=True)
 
     category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'), index=True)
-    manufacturer_id: Mapped[int] = mapped_column(ForeignKey('manufacturers.id'), index=True)
-    category: Mapped[ProductCategory] = relationship(back_populates='products')
-    manufacturer: Mapped[ProductManufacturer] = relationship(back_populates='products')
+    category: Mapped[ProductCategoryModel] = relationship(back_populates='products')
 
     is_active: Mapped[bool] = mapped_column(default=False)
 
