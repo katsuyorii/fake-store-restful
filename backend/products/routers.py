@@ -36,3 +36,7 @@ async def create_category(category_data: CategoryCreateSchema, product_categorie
 @categories_router.patch('/{category_id}', response_model=CategoryResponseSchema)
 async def update_category(category_id: int, category_updated_data: CategoryUpdateSchema, product_categories_service: ProductCategoriesService = Depends(get_product_categories_service)):
     return await product_categories_service.update_category(category_id, category_updated_data)
+
+@categories_router.delete('/{category_id}', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_category(category_id: int, product_categories_service: ProductCategoriesService = Depends(get_product_categories_service)):
+    return await product_categories_service.delete_category(category_id)

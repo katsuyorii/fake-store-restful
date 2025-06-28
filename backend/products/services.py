@@ -30,6 +30,14 @@ class ProductCategoriesService:
             raise CategoryNotFound()
         
         return await self.product_categories_repository.update(category, category_updated_data.model_dump(exclude_unset=True))
+    
+    async def delete_category(self, category_id: int) -> None:
+        category = await self.product_categories_repository.get_by_id(category_id)
+
+        if not category:
+            raise CategoryNotFound()
+        
+        await self.product_categories_repository.delete(category)
 
 
 class ProductManufacturersService:
