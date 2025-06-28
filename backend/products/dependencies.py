@@ -8,10 +8,12 @@ from products.repositories.categories import ProductCategoriesRepository
 from products.repositories.brands import ProductBrandsRepository
 from products.repositories.sizes import ProductSizesRepository
 from products.repositories.colors import ProductColorsRepository
+from products.repositories.products import ProductsRepository
 from products.services.categories import ProductCategoriesService
 from products.services.brands import ProductBrandsService
 from products.services.sizes import ProductSizesService
 from products.services.colors import ProductColorsService
+from products.services.products import ProductService
 
 
 def get_product_categories_repository(db: AsyncSession = Depends(get_db)) -> ProductCategoriesRepository:
@@ -26,6 +28,9 @@ def get_product_sizes_repository(db: AsyncSession = Depends(get_db)) -> ProductS
 def get_product_colors_repository(db: AsyncSession = Depends(get_db)) -> ProductColorsRepository:
     return ProductColorsRepository(db)
 
+def get_products_repository(db: AsyncSession = Depends(get_db)) -> ProductsRepository:
+    return ProductsRepository(db)
+
 def get_product_categories_service(product_categories_repository: ProductCategoriesRepository = Depends(get_product_categories_repository)):
     return ProductCategoriesService(product_categories_repository)
 
@@ -37,3 +42,6 @@ def get_product_sizes_service(product_sizes_repository: ProductSizesRepository =
 
 def get_product_colors_service(product_colors_repository: ProductBrandsRepository = Depends(get_product_colors_repository)):
     return ProductColorsService(product_colors_repository)
+
+def get_products_service(products_repository: ProductsRepository = Depends(get_products_repository)):
+    return ProductService(products_repository)
